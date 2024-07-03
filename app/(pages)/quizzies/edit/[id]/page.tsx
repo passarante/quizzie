@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { questionsFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Question, Quizzie } from "@prisma/client";
 
@@ -38,14 +39,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const questionsFormSchema = z.object({
-  content: z
-    .string()
-    .min(20, { message: "Content must be at least 20 characters long" }),
-  type: z.string().min(1),
-  correctAnswer: z.string().optional(),
-  answers: z.array(z.string().min(3)),
-});
+
 
 const QuizzieEditPage = () => {
   const answerLetters = [
@@ -78,7 +72,6 @@ const QuizzieEditPage = () => {
   ];
 
   const { id } = useParams();
-  const router = useRouter();
   const [quizzie, setQuizzie] = useState<Quizzie | null>(null);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);

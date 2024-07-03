@@ -20,26 +20,17 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { createQuizzieformSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .max(50),
-  description: z.string(),
-  type: z.string(),
-  enableTimer: z.string(),
-  timer: z.string().default("30"),
-});
 const CreateQuizziePage = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof createQuizzieformSchema>>({
     mode: "onTouched",
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createQuizzieformSchema),
     values: {
       name: "",
       description: "",
@@ -51,7 +42,7 @@ const CreateQuizziePage = () => {
 
   const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof createQuizzieformSchema>) => {
     const result = await createQuizzie(values);
     if (result.success) {
       toast({
