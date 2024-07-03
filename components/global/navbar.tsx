@@ -22,7 +22,7 @@ const Navbar = () => {
             <Button variant={"ghost"}>Signin</Button>
             <Button
               variant={"outline"}
-              className="text-black hover:bg-black hover:text-white"
+              className="text-black dark:bg-white dark:hover:bg-black hover:text-white"
             >
               Signup
             </Button>

@@ -1,11 +1,10 @@
 "use server";
 import { z } from 'zod';
-import { formSchema } from './../app/(pages)/quizzies/create/page';
 import db from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import { questionsFormSchema } from '@/app/(pages)/quizzies/edit/[id]/page';
+import { createQuizzieformSchema, questionsFormSchema } from '@/schemas';
 
-export const createQuizzie = async (values: z.infer<typeof formSchema>) => {
+export const createQuizzie = async (values: z.infer<typeof createQuizzieformSchema>) => {
     console.log(values);
     const authorId = auth().userId
     if (!authorId) {
