@@ -3,6 +3,7 @@ import { z } from 'zod';
 import db from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { createQuizzieformSchema, questionsFormSchema } from '@/schemas';
+import { error } from 'console';
 
 export const createQuizzie = async (values: z.infer<typeof createQuizzieformSchema>) => {
     console.log(values);
@@ -24,7 +25,8 @@ export const createQuizzie = async (values: z.infer<typeof createQuizzieformSche
             })
             return { data: result, success: true, code: 201 }
         } catch (error) {
-            return { error, success: false, code: 500 }
+            console.log(error);
+            return { error: "Server Eror", success: false, code: 500 }
         }
     }
 
