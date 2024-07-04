@@ -22,7 +22,7 @@ export const createQuizzie = async (values: z.infer<typeof createQuizzieformSche
                     authorId
                 }
             })
-            return { data: result, success: true, code: 200 }
+            return { data: result, success: true, code: 201 }
         } catch (error) {
             return { error, success: false, code: 500 }
         }
@@ -37,7 +37,11 @@ export const getQuizzie = async (id: string) => {
                 id
             },
             include: {
-                questions: true
+                questions: {
+                    include: {
+                        answers: true
+                    }
+                }
             }
 
         });
@@ -63,8 +67,9 @@ export const createQuestion = async (quizzieId: string, values: z.infer<typeof q
             }
         })
 
-        values.answers.forEach((answer, index) => {
-            db.answer.create({
+        values.answers.forEach(async (answer, index) => {
+            console.log(answer);
+            await db.answer.create({
                 data: {
                     content: answer,
                     questionId: result.id
@@ -72,6 +77,28 @@ export const createQuestion = async (quizzieId: string, values: z.infer<typeof q
             })
         })
 
+
+        return { data: result, success: true, code: 201 }
+    } catch (error) {
+        console.log(error);
+        return { error: "Error", success: false, code: 500 }
+    }
+}
+
+
+export const getUserQuizzies = async (userId: string) => {
+    try {
+        const result = await db.quizzie.findMany({
+            where: {
+                authorId: userId
+            },
+            include: {
+
+                questions: true
+
+
+            }
+        })
 
         return { data: result, success: true, code: 200 }
     } catch (error) {

@@ -1,5 +1,6 @@
 "use client";
 import { createQuestion, getQuizzie } from "@/actions/quizzie-actions";
+import QuizzieQuestionList from "@/components/quizzie/QuizzieQuestionList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -26,8 +27,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/use-toast";
+import { answerLetters } from "@/constants";
 import { cn } from "@/lib/utils";
 import { questionsFormSchema } from "@/schemas";
+import { QuestionWithAnswers } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Question, Quizzie } from "@prisma/client";
 
@@ -39,41 +42,12 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-
-
 const QuizzieEditPage = () => {
-  const answerLetters = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
-
   const { id } = useParams();
   const [quizzie, setQuizzie] = useState<Quizzie | null>(null);
-  const [questions, setQuestions] = useState<Question[] | null>(null);
+  const [questions, setQuestions] = useState<QuestionWithAnswers[] | null>(
+    null
+  );
   const [refresh, setRefresh] = useState<boolean>(false);
   const [showAddQuestionCard, setShowAddQuestionCard] =
     useState<boolean>(false);
@@ -89,12 +63,11 @@ const QuizzieEditPage = () => {
   });
 
   useEffect(() => {
-    console.log("object");
     if (id) {
       getQuizzie(id.toString()).then((result) => {
         if (result.success) {
           setQuizzie(result?.data as Quizzie);
-          setQuestions(result.data?.questions as Question[]);
+          setQuestions(result.data?.questions as QuestionWithAnswers[]);
         }
       });
     }
@@ -113,6 +86,7 @@ const QuizzieEditPage = () => {
       toast({ title: "Question created successfully" });
       setShowAddQuestionCard(false);
       setRefresh(!refresh);
+      form.reset();
     } else {
       toast({ title: "Something went wrong", variant: "destructive" });
     }
@@ -173,6 +147,8 @@ const QuizzieEditPage = () => {
           </CardContent>
         </Card>
       )}
+
+      {questions && <QuizzieQuestionList questions={questions} />}
 
       {showAddQuestionCard && (
         <Card className="mt-10">
